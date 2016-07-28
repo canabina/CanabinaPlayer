@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script type="text/javascript" src="assets/js/player.js"></script>
+    <link rel="stylesheet" href="assets/styles/player.css">
+</head>
+
+<body>
+
+    <div id="player"></div>
+
+    <script type="text/javascript">
+        var Player = CanabinaPlayer.init('#player',
+        {
+
+            playAfterInit: true,
+
+            autoPlay: true,
+
+            volume: 0.0,
+
+            // shuffle: true,
+
+            // loop: true,
+
+            // onPlay: (time) => {
+
+            // },
+
+            // onPlaying: () => {
+            // 	console.log('Play');
+            // },
+
+            // onPause: () => {
+            // 	console.log('Pause');
+            // },
+
+            // onEnded: () => {
+            // 	console.log('ended');
+            // },
+
+            // onLoadStart: () => {
+            // 	console.log('load start');
+            // },
+
+            trackList: [
+            {
+                url: 'assets/music/1.mp3',
+                artist: 'first',
+                name: 'wef234232323'
+            },
+            {
+                url: 'assets/music/2.mp3',
+                artist: 'second',
+                name: 'wef234232323'
+            },
+            {
+                url: 'assets/music/3.mp3',
+                artist: 'third',
+                name: 'wef234232323'
+            }]
+        });
+
+        
+        //METHODS
+    
+        // Player.shuffle();
+
+        // Player.setVolume(0.5);
+
+        // Player.playNext();
+
+        // Player.playPrev();
+
+        // Player.push([
+        // 	{
+        // 		url: '2.mp3',
+        // 		artist: 'Konopka',
+        // 		name: 'wef234232323'
+        // 	},
+        // 	{
+        // 		url: '3.mp3',
+        // 		artist: 'Lambada',
+        // 		name: 'wef234232323'
+        // 	}
+        // ]);
+
+        //
+        // Player.remove(0, true);
+
+        // Player.playTrackById(1);
+
+        // Player.pause();
+
+        // Player.play();
+
+        // Player.setCurrentTimeTrack(12);
+    </script>
+</body>
+</html>

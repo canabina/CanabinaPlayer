@@ -1,0 +1,102 @@
+.CPWrapper{
+	width: 600px;
+	height: 90px;
+	padding-top: 23px;
+	box-sizing: border-box;
+	background: #eaeaea;
+	font-family: arial;
+}
+.CPControlls{
+	float: left;
+	width: auto;
+}
+.CPControlls div{
+	float: left;
+}
+.CPControllsTrack{
+	width: 75px;
+	height: 30px;
+	border-radius: 4px;
+	
+	color: transparent;
+	background: url(../images/next_prev.svg) no-repeat center center, #CCCCCC;
+	cursor: pointer;
+	background-size: contain;
+	margin-left: 10px;
+}
+.CPPlay__pause{
+	height: 30px;
+	width: 30px;
+	border-radius: 4px;
+	cursor: pointer;
+	color: transparent;
+	background: url(../images/play_pause.svg) no-repeat center center, #CCCCCC;
+	background-size: contain;
+	margin-left: 10px;
+}
+.CPControllsTrack.CPPrev{
+	-webkit-transform: rotate(180deg);
+	-moz-transform: rotate(180deg);
+	-ms-transform: rotate(180deg);
+	-o-transform: rotate(180deg);
+	transform: rotate(180deg);
+}
+.CPProgressBar{
+	width: 300px;
+	height: 30px;
+	background: #7ACFE4;
+	float: left;
+	margin-left: 10px;
+	position: relative;
+}
+.CPProgressBarLine{
+	background: #00FFd5;
+	height: 100%;
+	width: 0;
+	display: inline-block;
+	float: left;
+}
+.CPProgressBarOverlay{
+	display: inline-block;
+	width: 100%;
+	height: 100%;
+	background: transparent;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+.CPTimeToLeft{
+	width: 50px;
+	height: 24px;
+	position: absolute;
+	right: 10px;
+	bottom: 0;
+}
+.CPInfoBar{
+	float: left;
+	padding: 10px;
+	box-sizing: border-box;
+}
+.CPInfoBar span{
+	height: 33%;
+	display: inline-block;
+	text-align: center;
+	margin-left: 10px;
+}
+.CPArtist{
+	position: relative;
+	margin-right: 10px;
+}
+.CPArtist:after{
+	display: block;
+	position: absolute;
+	width: 5px;
+	height: 1px;
+	background: #000;
+	right: -12px;
+	top: 9px;
+	content: ' ';
+}
+.CPAudioElement{
+	display: none!important;
+}
