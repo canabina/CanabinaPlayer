@@ -1,355 +1,439 @@
-(() => {
-	
-	function player() {
+(() =>
+{
 
-		let variables = {
-			conf: {
-				playAfterInit: false,
-				trackList: [],
-				volume: 1,
-				onPlay: () => {},
-				onPlaying: () => {},
-				onEnded: () => {},
-				onLoadStart: () => {},
-				onPause: () => {},
-				autoPlay: true,
-				shuffle: false,
-				loop: false,
-			},
-		},
-		self = this;
-		this.audioContext;
-		this.trackList;
-		this.currentTrack = {};
-		this.init = (selector, conf) => {
-			if (selector) {
-				variables.playerDocoumentObj = document.querySelector(selector);
-				variables.conf = Object.assign(variables.conf, conf);
-				if (!this.helpers.isEmpty(variables.playerDocoumentObj)) {
-					_buildPlayer();	
-					return new _methods(); 				
-				}
-			} else 
-				throw new ('Empty selector');
-		}
+    function player()
+    {
 
-		this.helpers = {
-			isEmpty: (obj) => {
-			    return Object.keys(obj).length === 0 && obj.constructor === Object
-			},
+        let variables = {
+                conf:
+                {
+                    playAfterInit: false,
+                    trackList: [],
+                    volume: 1,
+                    onPlay: () =>
+                    {},
+                    onPlaying: () =>
+                    {},
+                    onEnded: () =>
+                    {},
+                    onLoadStart: () =>
+                    {},
+                    onPause: () =>
+                    {},
+                    autoPlay: true,
+                    shuffle: false,
+                    loop: false,
+                },
+            },
+            self = this;
+        this.audioContext;
+        this.trackList;
+        this.currentTrack = {};
+        this.init = (selector, conf) =>
+        {
+            if (selector)
+            {
+                variables.playerDocoumentObj = document.querySelector(selector);
+                variables.conf = Object.assign(variables.conf, conf);
+                if (!this.helpers.isEmpty(variables.playerDocoumentObj))
+                {
+                    _buildPlayer();
+                    return new _methods();
+                }
+            }
+            else
+                throw new('Empty selector');
+        }
 
-			each: (object, callback) => {
-				for (let i = 0; i < object.length; i++) {
-					callback(i, object[i]);
-				}
-			},
+        this.helpers = {
+            isEmpty: (obj) =>
+            {
+                return Object.keys(obj)
+                    .length === 0 && obj.constructor === Object
+            },
 
-			hasClass: (element, className) => {
-				let res = false;
-				self.helpers.each(element.classList, (index, val) => {
-					if (val == className) 
-						res = true;	
-				});
-				return res;
-			},
+            each: (object, callback) =>
+            {
+                for (let i = 0; i < object.length; i++)
+                {
+                    callback(i, object[i]);
+                }
+            },
 
-			getTime: (sec) => {
-			    let sec_num = parseInt(sec, 10); 
-			    let hours   = Math.floor(sec_num / 3600);
-			    let minutes = Math.floor((sec_num - (hours * 3600)) / 60);
-			    let seconds = sec_num - (hours * 3600) - (minutes * 60);
-			    if (hours   < 10) {
-			    	hours   = "0"+hours;
-			    }
-			    if (minutes < 10) {
-			    	minutes = "0"+minutes;
-			    }
-			    if (seconds < 10) {
-			    	seconds = "0"+seconds;
-			    }
-			    return minutes+':'+seconds;
-			},
+            hasClass: (element, className) =>
+            {
+                let res = false;
+                self.helpers.each(element.classList, (index, val) =>
+                {
+                    if (val == className)
+                        res = true;
+                });
+                return res;
+            },
 
-			shuffleArray: (array) => {
-				var currentIndex = array.length, temporaryValue, randomIndex;
-				while (0 !== currentIndex) {
-					randomIndex = Math.floor(Math.random() * currentIndex);
-					currentIndex -= 1;
-					temporaryValue = array[currentIndex];
-					array[currentIndex] = array[randomIndex];
-					array[randomIndex] = temporaryValue;
-				}
-				return array;
-			}
-		}
+            getTime: (sec) =>
+            {
+                let sec_num = parseInt(sec, 10);
+                let hours = Math.floor(sec_num / 3600);
+                let minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+                let seconds = sec_num - (hours * 3600) - (minutes * 60);
+                if (hours < 10)
+                {
+                    hours = "0" + hours;
+                }
+                if (minutes < 10)
+                {
+                    minutes = "0" + minutes;
+                }
+                if (seconds < 10)
+                {
+                    seconds = "0" + seconds;
+                }
+                return minutes + ':' + seconds;
+            },
 
-		function _buildPlayer() {
-			let playerTemplate = "<div class='CPControlls'>"
-									 +"<div class='CPControllsTrack CPPrev'></div>"
-									 +"<div class='CPButton CPPlay__pause'></div>"
-									 +"<div class='CPControllsTrack CPNext'></div>"
-								 +"</div>"
-								 +"<div class='CPProgressBar'>"
-									 +"<span class='CPProgressBarLine'></span>"
-									 +"<span class='CPTimeToLeft'></span>"
-									 +"<span class='CPProgressBarOverlay'></span>"
-								 +"</div>"
-								 +"<div class='CPInfoBar'>"
-									 +"<span class='CPArtist'></span>"
-									 +"<span class='CPTrackName'></span>"
-									 +"<span class='CPTimeLenght'></span>"
-								 +"</div>"
-								 +"<audio class='CPAudioElement'></audio>";
+            shuffleArray: (array) =>
+            {
+                var currentIndex = array.length,
+                    temporaryValue, randomIndex;
+                while (0 !== currentIndex)
+                {
+                    randomIndex = Math.floor(Math.random() * currentIndex);
+                    currentIndex -= 1;
+                    temporaryValue = array[currentIndex];
+                    array[currentIndex] = array[randomIndex];
+                    array[randomIndex] = temporaryValue;
+                }
+                return array;
+            }
+        }
 
-			variables.playerDocoumentObj.classList.add('CPWrapper');				
-			variables.playerDocoumentObj.innerHTML = playerTemplate;
-			_loadAudioApi();
-			_eventsListener();
-		}
+        function _buildPlayer()
+        {
+            let playerTemplate = "<div class='CPControlls'>" +
+                "<div class='CPControllsTrack CPPrev'>prev</div>" +
+                "<div class='CPButton CPPlay__pause'>Play</div>" +
+                "<div class='CPControllsTrack CPNext'>next</div>" +
+                "</div>" +
+                "<div class='CPProgressBar'>" +
+                "<span class='CPProgressBarLine'></span>" +
+                "<span class='CPTimeToLeft'></span>" +
+                "<span class='CPProgressBarOverlay'></span>" +
+                "</div>" +
+                "<div class='CPInfoBar'>" +
+                "<span class='CPArtist'></span>" +
+                "<span class='CPTrackName'></span>" +
+                "<span class='CPTimeLenght'></span>" +
+                "</div>" +
+                "<audio class='CPAudioElement'></audio>";
 
-
-		function _loadAudioApi() {
-			self.audioContext = document.querySelector('.CPAudioElement');
-			self.trackList = variables.conf.trackList;
-			if (variables.conf.shuffle) {
-				_shuffleTrackList();
-			} 
-			_setNewTrackById(Object.keys(self.trackList)[0]);
-			self.audioContext.volume = variables.conf.volume;
-			_beforeFirstPlay();
-			self.audioContext.ontimeupdate = () => {
-				_onPlay();
-			}
-			self.audioContext.onplaying = () => {
-				_onPlaying();
-			}
-			self.audioContext.onended = () => {
-				_onEnded();
-			}
-			self.audioContext.onloadstart = () => {
-				_onLoadStart();
-			}
-			self.audioContext.onpause = () => {
-				_onPause();
-			}
-			if (variables.conf.autoPlay) {
-				self.audioContext.onended = () => { 
-					_playNextOrPrevTrack(false);
-				}
-			} 
-			if (variables.conf.playAfterInit) {
-				_play();
-			}
-		}
+            variables.playerDocoumentObj.classList.add('CPWrapper');
+            variables.playerDocoumentObj.innerHTML = playerTemplate;
+            _loadAudioApi();
+            _eventsListener();
+        }
 
 
-		function _beforeFirstPlay() {
-			variables.progressLine = document.querySelector('.CPProgressBarLine');
-			variables.widthWrapperLine = document.querySelector('.CPProgressBar').offsetWidth;
-		}
+        function _loadAudioApi()
+        {
+            self.audioContext = document.querySelector('.CPAudioElement');
+            self.trackList = variables.conf.trackList;
+            if (variables.conf.shuffle)
+            {
+                _shuffleTrackList();
+            }
+            _setNewTrackById(Object.keys(self.trackList)[0]);
+            self.audioContext.volume = variables.conf.volume;
+            _beforeFirstPlay();
+            self.audioContext.ontimeupdate = () =>
+            {
+                _onPlay();
+            }
+            self.audioContext.onplaying = () =>
+            {
+                _onPlaying();
+            }
+            self.audioContext.onended = () =>
+            {
+                _onEnded();
+            }
+            self.audioContext.onloadstart = () =>
+            {
+                _onLoadStart();
+            }
+            self.audioContext.onpause = () =>
+            {
+                _onPause();
+            }
+            if (variables.conf.autoPlay)
+            {
+                self.audioContext.onended = () =>
+                {
+                    _playNextOrPrevTrack(false);
+                }
+            }
+            if (variables.conf.playAfterInit)
+            {
+                _play();
+            }
+        }
 
-		function _methods() {
-			this.shuffle = () => {
-				_shuffleTrackList();
-				_playTrackById(0);
-			}
 
-			this.setVolume = (value) => {
-				if (value && value <= 1) {
-					_setVolume(value);
-				}
-			}
+        function _beforeFirstPlay()
+        {
+            variables.progressLine = document.querySelector('.CPProgressBarLine');
+            variables.widthWrapperLine = document.querySelector('.CPProgressBar')
+                .offsetWidth;
+        }
 
-			this.playNext = () => {
-				_playNextOrPrevTrack(false);
-			}
+        function _methods()
+        {
+            this.shuffle = () =>
+            {
+                _shuffleTrackList();
+                _playTrackById(0);
+            }
 
-			this.playPrev = () => {
-				_playNextOrPrevTrack(true);
-			}
+            this.setVolume = (value) =>
+            {
+                if (value && value <= 1)
+                {
+                    _setVolume(value);
+                }
+            }
 
-			this.push = (items) => {
-				_addItemsToTrackList(items);
-			}
+            this.playNext = () =>
+            {
+                _playNextOrPrevTrack(false);
+            }
 
-			this.remove = (id, restart) => {
-				if (id !== false) {
-					_removeTrackFromTrackListById(id, restart);
-				}
-			}
+            this.playPrev = () =>
+            {
+                _playNextOrPrevTrack(true);
+            }
 
-			this.playTrackById = (id) => {
-				_playTrackById(id);
-			}
+            this.push = (items) =>
+            {
+                _addItemsToTrackList(items);
+            }
 
-			this.pause = () => {
-				_stop();
-			}
+            this.remove = (id, restart) =>
+            {
+                if (id !== false)
+                {
+                    _removeTrackFromTrackListById(id, restart);
+                }
+            }
 
-			this.play = () => {
-				_play();
-			}
+            this.playTrackById = (id) =>
+            {
+                _playTrackById(id);
+            }
 
-			this.setCurrentTimeTrack = (seconds) => {
-				_setCurrentTrackTime(seconds);
-			}
-		}
+            this.pause = () =>
+            {
+                _stop();
+            }
 
-		function _setVolume(value) {
-			self.audioContext.volume = value;
-		}
+            this.play = () =>
+            {
+                _play();
+            }
 
-		function _shuffleTrackList() {
-			self.trackList = self.helpers.shuffleArray(self.trackList);
-		}
+            this.setCurrentTimeTrack = (seconds) =>
+            {
+                _setCurrentTrackTime(seconds);
+            }
+        }
 
-		function _removeTrackFromTrackListById(id, restart) {
-			self.trackList.splice(id, 1);
-			if (restart && self.currentTrack.obj.id == id){
-				let id = _getNextOrPrewId(false);
-				id--;
-				_playTrackById(id);
-			}
-		}
+        function _setVolume(value)
+        {
+            self.audioContext.volume = value;
+        }
 
-		function _addItemsToTrackList(items) {
-			self.trackList = self.trackList.concat(items);
-		}
+        function _shuffleTrackList()
+        {
+            self.trackList = self.helpers.shuffleArray(self.trackList);
+        }
 
-		function _onPlay() {
-			variables.conf.onPlay(self.audioContext.currentTime);
-			_changeProgressBar();
-			_setTimeToLeft();
-		}
+        function _removeTrackFromTrackListById(id, restart)
+        {
+            self.trackList.splice(id, 1);
+            if (restart && self.currentTrack.obj.id == id)
+            {
+                let id = _getNextOrPrewId(false);
+                id--;
+                _playTrackById(id);
+            }
+        }
 
-		function _onPlaying() {
-			 variables.conf.onPlaying();
-		}
+        function _addItemsToTrackList(items)
+        {
+            self.trackList = self.trackList.concat(items);
+        }
 
-		function _onPause() {
-			 variables.conf.onPause();
-		}
+        function _onPlay()
+        {
+            variables.conf.onPlay(self.audioContext.currentTime);
+            _changeProgressBar();
+            _setTimeToLeft();
+        }
 
-		function _onEnded() {
-			 variables.conf.onEnded();
-		}
+        function _onPlaying()
+        {
+            variables.conf.onPlaying();
+        }
 
-		function _onLoadStart() {
-			 variables.conf.onLoadStart();
-		}
+        function _onPause()
+        {
+            variables.conf.onPause();
+        }
 
-		function _play() {
-			self.audioContext.play();
-		}
+        function _onEnded()
+        {
+            variables.conf.onEnded();
+        }
 
-		function _stop() {
-			self.audioContext.pause();
-		}
+        function _onLoadStart()
+        {
+            variables.conf.onLoadStart();
+        }
 
-		function _changeProgressBar() {
-			let perceange = (self.audioContext.currentTime / _getCurrentTrackDuration()) * 100;
-			variables.progressLine.style.width = perceange+'%';
-		}
+        function _play()
+        {
+            self.audioContext.play();
+        }
 
-		function _setCurrentTrackTime(seconds) {
-			self.audioContext.currentTime = seconds;
-		}
+        function _stop()
+        {
+            self.audioContext.pause();
+        }
 
-		function _changeCurrentTimeByClickOnProgressBar(pos, element) {
-			let perceange = (pos / element.offsetWidth) * 100;
-			_setCurrentTrackTime ( (_getCurrentTrackDuration() / 100) * perceange );
-			_changeProgressBar();
-		}
+        function _changeProgressBar()
+        {
+            let perceange = (self.audioContext.currentTime / _getCurrentTrackDuration()) * 100;
+            variables.progressLine.style.width = perceange + '%';
+        }
 
-		function _setTimeToLeft() {
-			let currentTime = self
-							  .helpers
-							  .getTime( 
-							  		Math.round(
-							  				self.audioContext.currentTime
-							  			)
-							  		);
-			
-			document.querySelector('.CPTimeToLeft').innerHTML = currentTime;
-		}
+        function _setCurrentTrackTime(seconds)
+        {
+            self.audioContext.currentTime = seconds;
+        }
 
-		function _getNextOrPrewId(vector) {
-			let newId = self.currentTrack.obj.id;
-			vector ? newId-- : newId++;
-			if (newId >= 0 && self.trackList[newId]) {
-				return newId;
-			} else if (newId >= 0 && variables.conf.loop)
-				return 0;
-			return false;
-		}
+        function _changeCurrentTimeByClickOnProgressBar(pos, element)
+        {
+            let perceange = (pos / element.offsetWidth) * 100;
+            _setCurrentTrackTime((_getCurrentTrackDuration() / 100) * perceange);
+            _changeProgressBar();
+        }
 
-		function _playNextOrPrevTrack(vector) {
-			let id = _getNextOrPrewId(vector);
-			if (id !== false) {
-				_playTrackById(id);
-			}
-		}
+        function _setTimeToLeft()
+        {
+            let currentTime = self
+                .helpers
+                .getTime(
+                    Math.round(
+                        self.audioContext.currentTime
+                    )
+                );
 
-		function _setNewTrackById(id) {
-			self.currentTrack.obj = self.trackList[id];
-			self.currentTrack.obj.id = id;
-			self.audioContext.src = self.currentTrack.obj.url;
-			self.audioContext.load();
-			_setInfoByTrack();
-		}
+            document.querySelector('.CPTimeToLeft')
+                .innerHTML = currentTime;
+        }
 
-		function _playTrackById(id) {
-			_stop();
-			_setNewTrackById(id);
-			_play();
-		}
+        function _getNextOrPrewId(vector)
+        {
+            let newId = self.currentTrack.obj.id;
+            vector ? newId-- : newId++;
+            if (newId >= 0 && self.trackList[newId])
+            {
+                return newId;
+            }
+            else if (newId >= 0 && variables.conf.loop)
+                return 0;
+            return false;
+        }
 
-		function _playOrPause() {
-			self.audioContext.paused ? _play() : _stop();
-		}
+        function _playNextOrPrevTrack(vector)
+        {
+            let id = _getNextOrPrewId(vector);
+            if (id !== false)
+            {
+                _playTrackById(id);
+            }
+        }
 
-		function _getCurrentTrackDuration () {
-			while (!isNaN(self.audioContext.duration)) {
-				return self.audioContext.duration;
-			}
-		}
+        function _setNewTrackById(id)
+        {
+            self.currentTrack.obj = self.trackList[id];
+            self.currentTrack.obj.id = id;
+            self.audioContext.src = self.currentTrack.obj.url;
+            self.audioContext.load();
+            _setInfoByTrack();
+        }
 
-		function _setInfoByTrack() {
-			document.querySelector('.CPArtist').innerHTML = self.currentTrack.obj.artist;
-			document.querySelector('.CPTrackName').innerHTML = self.currentTrack.obj.name;
-			// document.querySelector('.CPTimeLenght').innerHTML = _getCurrentTrackDuration();
-		}
+        function _playTrackById(id)
+        {
+            _stop();
+            _setNewTrackById(id);
+            _play();
+        }
 
-		function _eventsListener() {
+        function _playOrPause()
+        {
+            self.audioContext.paused ? _play() : _stop();
+        }
 
-			let controlls = document.querySelectorAll('.CPControllsTrack');
-			for (let i = 0; i < controlls.length; i++) {
-				controlls[i].addEventListener('click', (event) => {
-					_playNextOrPrevTrack(
-						self
-						.helpers
-						.hasClass(
-							event.target,
-							 'CPPrev'
-						)
-					);
-				});
-			}
-			document.querySelector('.CPPlay__pause')
-					.addEventListener('click', (event) => {
-						_playOrPause();
-					});
+        function _getCurrentTrackDuration()
+        {
+            while (!isNaN(self.audioContext.duration))
+            {
+                return self.audioContext.duration;
+            }
+        }
 
-			document.querySelector('.CPProgressBarOverlay')
-					.addEventListener('click', (event) => {
-						_changeCurrentTimeByClickOnProgressBar(event.offsetX, event.target);
-					});
+        function _setInfoByTrack()
+        {
+            document.querySelector('.CPArtist')
+                .innerHTML = self.currentTrack.obj.artist;
+            document.querySelector('.CPTrackName')
+                .innerHTML = self.currentTrack.obj.name;
+            // document.querySelector('.CPTimeLenght').innerHTML = _getCurrentTrackDuration();
+        }
 
-		}
-	}
+        function _eventsListener()
+        {
 
-	window.CanabinaPlayer = new player;
+            let controlls = document.querySelectorAll('.CPControllsTrack');
+            for (let i = 0; i < controlls.length; i++)
+            {
+                controlls[i].addEventListener('click', (event) =>
+                {
+                    _playNextOrPrevTrack(
+                        self
+                        .helpers
+                        .hasClass(
+                            event.target,
+                            'CPPrev'
+                        )
+                    );
+                });
+            }
+            document.querySelector('.CPPlay__pause')
+                .addEventListener('click', (event) =>
+                {
+                    _playOrPause();
+                });
+
+            document.querySelector('.CPProgressBarOverlay')
+                .addEventListener('click', (event) =>
+                {
+                    _changeCurrentTimeByClickOnProgressBar(event.offsetX, event.target);
+                });
+
+        }
+    }
+
+    window.CanabinaPlayer = new player;
 
 })();
-
-
